@@ -1,0 +1,3 @@
+Hello, Go File I/O!
+This is a sample text file.
+This line was appended!
