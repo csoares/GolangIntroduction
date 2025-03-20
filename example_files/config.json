@@ -1,0 +1,16 @@
+{
+    "server": {
+        "host": "localhost",
+        "port": 8080
+    },
+    "database": {
+        "host": "db.example.com",
+        "port": 5432,
+        "username": "admin",
+        "password": "secret"
+    },
+    "logging": {
+        "level": "info",
+        "output": "app.log"
+    }
+}

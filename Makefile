@@ -28,7 +28,7 @@ pointers:
 	go run 08_Pointers/main.go
 
 methods:
-	go run 09_Methods_Interfaces/main.go
+	go run 09_Methods_Interfaces/*.go
 
 # Intermediate Examples
 intermediate: packages errors fileio
@@ -50,7 +50,8 @@ concurrency:
 
 channels:
 	go run 14_Channels/01_basic/main.go
-	fanin:
+
+fanin:
 	go run 15_AdvancedConcurrency/01_FanInFanOut/main.go
 
 ratelimit:
