@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Go Programming Course - Slide Viewer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
     <style>
@@ -15,6 +15,7 @@
         }
 
         :root {
+            /* Dark theme (default) */
             --bg-primary: #0d1117;
             --bg-secondary: #161b22;
             --bg-tertiary: #21262d;
@@ -26,6 +27,21 @@
             --accent-purple: #a371f7;
             --accent-orange: #f0883e;
             --accent-red: #f85149;
+        }
+
+        /* Light theme */
+        body.light-mode {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f6f8fa;
+            --bg-tertiary: #eaeef2;
+            --border: #d0d7de;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --accent-blue: #0969da;
+            --accent-green: #1a7f37;
+            --accent-purple: #8250df;
+            --accent-orange: #cf4a18;
+            --accent-red: #cf222e;
         }
 
         html, body {
@@ -611,6 +627,9 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme (T)" id="theme-btn">
+                    ☀️
+                </button>
                 <button class="icon-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen (F)">
                     ⛶
                 </button>
@@ -871,6 +890,29 @@
             }
         }
 
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+
+            // Swap highlight.js theme
+            const themeLink = document.getElementById('hljs-theme');
+            themeLink.href = isLight
+                ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css'
+                : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css';
+
+            // Update button icon
+            document.getElementById('theme-btn').textContent = isLight ? '🌙' : '☀️';
+        }
+
+        // Load saved theme on startup
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+            const themeLink = document.getElementById('hljs-theme');
+            themeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+            document.getElementById('theme-btn').textContent = '🌙';
+        }
+
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             // Ignore if user is typing in a form
@@ -900,6 +942,10 @@
                 case 'f':
                 case 'F':
                     toggleFullscreen();
+                    break;
+                case 't':
+                case 'T':
+                    toggleTheme();
                     break;
             }
         });
