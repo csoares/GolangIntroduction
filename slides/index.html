@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Programming Course - Slide Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .lecture-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        select {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            min-width: 250px;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .slide-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
+            padding: 3rem;
+            position: relative;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .slide-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .slide-content h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .slide-content h2 {
+            color: #764ba2;
+            font-size: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .slide-content h3 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .slide-content code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #e83e8c;
+        }
+
+        .slide-content pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .slide-content pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .slide-content ul, .slide-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .slide-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .slide-content th, .slide-content td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .slide-content th {
+            background: #667eea;
+            color: white;
+        }
+
+        .slide-content tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .slide-content blockquote {
+            border-left: 4px solid #667eea;
+            margin: 1rem 0;
+            padding-left: 1rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 1rem;
+            right: 2rem;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .keyboard-hint {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.5rem;
+            padding: 3rem;
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .slide-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .slide-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .slide-content h2 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Go Programming Course</h1>
+        <div class="lecture-selector">
+            <label for="lecture-select">Select Lecture:</label>
+            <select id="lecture-select">
+                <option value="">Loading lectures...</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="slide-container" id="slide-container">
+            <div class="loading">Loading slides...</div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()">⬅️ Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next ➡️</button>
+    </div>
+
+    <div class="keyboard-hint">
+        Keyboard: ← → arrow keys to navigate | Space/Enter for next
+    </div>
+
+    <script>
+        const lectures = [
+            { file: 'lecture_01_introduction.md', title: '01: Welcome to Go!' },
+            { file: 'lecture_02_variables.md', title: '02: Variables and Types' },
+            { file: 'lecture_03_control_structures.md', title: '03: Control Structures' },
+            { file: 'lecture_04_loops.md', title: '04: Loops' },
+            { file: 'lecture_05_functions.md', title: '05: Functions' },
+            { file: 'lecture_06_arrays_slices.md', title: '06: Arrays and Slices' },
+            { file: 'lecture_07_maps.md', title: '07: Maps' },
+            { file: 'lecture_08_structs.md', title: '08: Structs' },
+            { file: 'lecture_09_pointers.md', title: '09: Pointers' },
+            { file: 'lecture_10_methods_interfaces.md', title: '10: Methods and Interfaces' },
+            { file: 'lecture_11_packages_modules.md', title: '11: Packages and Modules' },
+            { file: 'lecture_12_error_handling.md', title: '12: Error Handling' },
+            { file: 'lecture_13_file_io.md', title: '13: File I/O' },
+            { file: 'lecture_14_goroutines.md', title: '14: Goroutines' },
+            { file: 'lecture_15_channels.md', title: '15: Channels' }
+        ];
+
+        let currentLecture = 0;
+        let slides = [];
+        let currentSlide = 0;
+
+        // Populate lecture selector
+        const select = document.getElementById('lecture-select');
+        select.innerHTML = lectures.map((l, i) =>
+            `<option value="${i}">${l.title}</option>`
+        ).join('');
+
+        select.addEventListener('change', (e) => {
+            loadLecture(parseInt(e.target.value));
+        });
+
+        // Simple markdown parser
+        function parseMarkdown(md) {
+            let html = md
+                // Headers
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                // Code blocks
+                .replace(/```(\w+)?\n([\s\S]*?)```/gim, '<pre><code>$2</code></pre>')
+                // Inline code
+                .replace(/`([^`]+)`/gim, '<code>$1</code>')
+                // Bold/Italic
+                .replace(/\*\*\*(.*?)\*\*\*/gim, '<strong><em>$1</em></strong>')
+                .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+                // Blockquotes
+                .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+                // Tables
+                .replace(/\|(.+)\|/gim, (match) => {
+                    const cells = match.split('|').filter(c => c.trim());
+                    const isHeader = match.includes('---');
+                    if (isHeader) return '';
+                    return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+                })
+                // Lists
+                .replace(/^\- (.*$)/gim, '<li>$1</li>')
+                .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
+                // Paragraphs
+                .replace(/\n\n/gim, '</p><p>')
+                // Line breaks
+                .replace(/\n/gim, '<br>');
+
+            // Wrap lists
+            html = html.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
+            html = html.replace(/<\/ul><ul>/gim, '');
+
+            // Wrap tables
+            if (html.includes('<tr>')) {
+                html = html.replace(/(<tr>.*<\/tr>)/gim, '<table>$1</table>');
+                html = html.replace(/<\/table><table>/gim, '');
+            }
+
+            return '<div class="slide-content">' + html + '</div>';
+        }
+
+        // Split markdown into slides
+        function splitSlides(md) {
+            // Split by slide separators (--- or # Lecture)
+            const parts = md.split(/---\s*\n/);
+            return parts.filter(p => p.trim().length > 0);
+        }
+
+        async function loadLecture(index) {
+            currentLecture = index;
+            select.value = index;
+
+            try {
+                const response = await fetch(lectures[index].file);
+                if (!response.ok) throw new Error('Failed to load');
+                const md = await response.text();
+
+                slides = splitSlides(md);
+                currentSlide = 0;
+                showSlide();
+            } catch (error) {
+                document.getElementById('slide-container').innerHTML =
+                    `<div class="error">Error loading lecture: ${error.message}</div>`;
+            }
+        }
+
+        function showSlide() {
+            const container = document.getElementById('slide-container');
+            if (slides.length === 0) {
+                container.innerHTML = '<div class="error">No slides found</div>';
+                return;
+            }
+
+            const html = parseMarkdown(slides[currentSlide]);
+            const slideNum = `<div class="slide-number">Slide ${currentSlide + 1} of ${slides.length}</div>`;
+            container.innerHTML = html + slideNum;
+
+            // Update buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide >= slides.length - 1;
+
+            // Scroll to top
+            container.scrollTop = 0;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Load first lecture
+        loadLecture(0);
+    </script>
+</body>
+</html>
