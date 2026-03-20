@@ -2,6 +2,19 @@
 
 Welcome to the Golang Introduction Course! This repository contains a series of examples designed to help you learn Go programming language from the ground up.
 
+## 🎓 HTML Slides Available!
+
+**[📺 View Slides Online](https://csoares.github.io/GolangIntroduction/slides/)**
+
+A complete HTML slide presentation system with 15 lectures is now available. Open the link above to view the course slides directly in your browser!
+
+**Features:**
+- 📱 Responsive design (works on mobile and desktop)
+- ⌨️ Keyboard navigation (arrow keys)
+- 🎨 Syntax highlighting
+- 📖 ~30 slides per lecture
+- 🎯 Kid-friendly explanations with examples
+
 ## Course Structure
 
 The course is organized into numbered folders, each focusing on a specific concept. The numbering indicates the recommended learning path, starting from basic concepts and progressing to more advanced topics.
