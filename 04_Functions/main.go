@@ -1,3 +1,5 @@
+//go:build ignore
+
 // Package main is the entry point for all Go programs
 package main
 

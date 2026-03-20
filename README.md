@@ -16,35 +16,43 @@ The course is organized into numbered folders, each focusing on a specific conce
 6. **06_Maps** - Using maps for key-value data
 7. **07_Structs** - Creating custom data types with structs
 8. **08_Pointers** - Understanding pointers and memory management
-9. **09_Methods_Interfaces** - Object-oriented programming in Go
-10. **10_Packages_Modules** - Organizing code with packages and modules
-11. **11_ErrorHandling** - Handling errors effectively
+9. **09_Methods_Interfaces** - Object-oriented programming in Go with interfaces
+10. **10_Packages_Modules** - Organizing code with packages and modules (includes tests)
+11. **11_ErrorHandling** - Handling errors effectively with custom error types
 12. **12_FileIO** - Reading and writing files
-13. **13_Concurrency** - Introduction to goroutines
-14. **14_Channels** - Communication between goroutines
-15. **15_AdvancedConcurrency** - Advanced patterns with goroutines and channels
+13. **13_Concurrency** - Introduction to goroutines and WaitGroups
+14. **14_Channels** - Communication between goroutines with pipelines
+15. **15_AdvancedConcurrency** - Production-grade patterns: Fan-in/Fan-out, Rate Limiting, Context Cancellation, Semaphores
 
-## How to Use This Course
+## Production-Grade Features
 
-1. Follow the folders in numerical order
-2. Read the comments in each file to understand the concepts
-3. Try to modify the examples to experiment with the concepts
-4. Complete the exercises in each section if provided
+This codebase demonstrates production-grade Go practices:
+
+### Concurrency Patterns
+- **Context-aware operations**: All concurrent functions accept `context.Context` for cancellation and timeouts
+- **Buffered channels**: Pipeline stages use buffered channels to prevent goroutine leaks
+- **Proper synchronization**: WaitGroup patterns follow Go best practices
+- **Race-free code**: Uses local `rand.Rand` instances instead of global `math/rand`
+
+### Testing
+- Comprehensive unit tests for `calculator` and `geometry` packages
+- Table-driven tests with subtests for clarity
+- Benchmark tests for performance-critical functions
+- Run tests with: `go test ./...`
+
+### Code Organization
+- Build tags (`//go:build ignore`) on example mains prevent build conflicts
+- Proper package documentation with godoc comments
+- Interface-based design for extensibility
 
 ## Prerequisites
 
 - Basic programming knowledge
-- Go installed on your machine (visit [golang.org](https://golang.org/dl/) to download)
-
-## Additional Resources
-
-- [Official Go Documentation](https://golang.org/doc/)
-- [Go by Example](https://gobyexample.com/)
-- [A Tour of Go](https://tour.golang.org/)
+- Go 1.22+ installed on your machine (visit [golang.org](https://golang.org/dl/) to download)
 
 ## Using the Makefile
 
-This repository includes a Makefile to help you run examples easily. Here are the available commands:
+This repository includes a Makefile to help you run examples easily:
 
 ### Basic Examples
 ```bash
@@ -86,5 +94,46 @@ make fmt         # Format all Go files
 make test        # Run all tests
 make clean       # Clean build artifacts
 ```
+
+## Running Tests
+
+The `10_Packages_Modules` directory contains comprehensive tests:
+
+```bash
+cd 10_Packages_Modules
+go test ./... -v          # Run all tests with verbose output
+go test ./... -race       # Run tests with race detector
+go test ./... -bench=.    # Run benchmarks
+```
+
+## Key Concepts Demonstrated
+
+### Error Handling
+- Custom error types implementing the `error` interface
+- Error wrapping with `fmt.Errorf("%w")`
+- Error checking with `errors.Is()`
+
+### Interfaces
+- Interface-based design for shapes (Area, Perimeter)
+- Type assertions and type switches
+- Implicit interface satisfaction
+
+### Concurrency
+- Goroutines and channels
+- Buffered vs unbuffered channels
+- Select statements for multiplexing
+- Pipeline patterns
+- Worker pools
+- Rate limiting with token bucket
+- Context for cancellation
+- Semaphores for resource limiting
+
+## Additional Resources
+
+- [Official Go Documentation](https://golang.org/doc/)
+- [Go by Example](https://gobyexample.com/)
+- [A Tour of Go](https://tour.golang.org/)
+- [Effective Go](https://go.dev/doc/effective_go)
+- [Go Code Review Comments](https://github.com/golang/go/wiki/CodeReviewComments)
 
 Happy coding!

@@ -1,7 +1,11 @@
+//go:build ignore
+
 package main
 
 import (
+	"context"
 	"fmt"
+	"math/rand"
 	"sync"
 	"time"
 )
@@ -13,6 +17,7 @@ type RateLimiter struct {
 	tokens     int           // current tokens
 	lastRefill time.Time     // last token refill time
 	mu         sync.Mutex    // for thread safety
+	rng        *rand.Rand    // local random number generator
 }
 
 func NewRateLimiter(rate time.Duration, capacity int) *RateLimiter {
@@ -21,6 +26,7 @@ func NewRateLimiter(rate time.Duration, capacity int) *RateLimiter {
 		capacity:   capacity,
 		tokens:     capacity,
 		lastRefill: time.Now(),
+		rng:        rand.New(rand.NewSource(time.Now().UnixNano())),
 	}
 }
 

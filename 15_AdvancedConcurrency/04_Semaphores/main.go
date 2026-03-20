@@ -1,3 +1,5 @@
+//go:build ignore
+
 package main
 
 import (
@@ -38,7 +40,7 @@ type Resource struct {
 
 // UseResource simulates using a shared resource
 func (r *Resource) UseResource() {
-	time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
+	time.Sleep(time.Duration(rng.Intn(1000)) * time.Millisecond)
 }
 
 // ResourcePool manages a pool of resources with semaphore-controlled access
@@ -67,7 +69,7 @@ func (p *ResourcePool) UseResource(workerID int) {
 	defer p.sem.Release()
 
 	// Simulate resource selection
-	resourceID := rand.Intn(len(p.resources))
+	resourceID := rng.Intn(len(p.resources))
 	resource := p.resources[resourceID]
 
 	fmt.Printf("Worker %d acquired resource %d\n", workerID, resource.id)
@@ -75,9 +77,8 @@ func (p *ResourcePool) UseResource(workerID int) {
 	fmt.Printf("Worker %d released resource %d\n", workerID, resource.id)
 }
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
+// rng is a local random number generator for this package
+var rng = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 func main() {
 	// Create a resource pool with 3 resources
@@ -93,7 +94,7 @@ func main() {
 			for j := 0; j < 3; j++ {
 				pool.UseResource(id)
 				// Wait a bit before next attempt
-				time.Sleep(time.Duration(rand.Intn(500)) * time.Millisecond)
+				time.Sleep(time.Duration(rng.Intn(500)) * time.Millisecond)
 			}
 		}(i)
 	}

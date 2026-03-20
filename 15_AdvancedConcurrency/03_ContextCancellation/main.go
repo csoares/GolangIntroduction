@@ -1,3 +1,5 @@
+//go:build ignore
+
 package main
 
 import (
@@ -7,6 +9,9 @@ import (
 	"sync"
 	"time"
 )
+
+// rng is a local random number generator for this package
+var rng = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // Worker represents a long-running task
 type Worker struct {
@@ -24,7 +29,7 @@ func (w *Worker) DoWork(ctx context.Context) error {
 			return ctx.Err()
 		default:
 			// Simulate some work
-			time.Sleep(time.Duration(rand.Intn(500)) * time.Millisecond)
+			time.Sleep(time.Duration(rng.Intn(500)) * time.Millisecond)
 			fmt.Printf("Worker %d: Completed iteration %d\n", w.id, i)
 		}
 	}
@@ -51,8 +56,8 @@ func NewWorkerPool(numWorkers int) *WorkerPool {
 
 // Start launches all workers and manages their lifecycle
 func (p *WorkerPool) Start(ctx context.Context) {
+	p.wg.Add(len(p.workers))
 	for _, worker := range p.workers {
-		p.wg.Add(1)
 		go func(w *Worker) {
 			defer p.wg.Done()
 			if err := w.DoWork(ctx); err != nil {

@@ -1,9 +1,12 @@
+//go:build ignore
+
 package main
 
 import (
-	"calculator-app/calculator"
-	"calculator-app/geometry"
 	"fmt"
+
+	"golang-introduction/calculator"
+	"golang-introduction/geometry"
 )
 
 func main() {
