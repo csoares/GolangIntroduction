@@ -14,6 +14,20 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #7d8590;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-purple: #a371f7;
+            --accent-orange: #f0883e;
+            --accent-red: #f85149;
+        }
+
         html, body {
             height: 100%;
             overflow: hidden;
@@ -21,27 +35,42 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: #0d1117;
-            color: #c9d1d9;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* App Container */
+        .app {
+            height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
+        /* Header */
         .header {
-            background: #161b22;
-            padding: 0 2rem;
-            height: 50px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0.5rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #30363d;
             flex-shrink: 0;
+            z-index: 100;
         }
 
-        .header h1 {
-            color: #58a6ff;
-            font-size: 1.2rem;
-            font-weight: 600;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .lecture-selector {
@@ -51,304 +80,496 @@
         }
 
         .lecture-selector label {
-            color: #8b949e;
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         select {
-            padding: 0.4rem 0.8rem;
+            padding: 0.35rem 0.75rem;
             font-size: 0.9rem;
-            border: 1px solid #30363d;
+            border: 1px solid var(--border);
             border-radius: 6px;
-            background: #0d1117;
-            color: #c9d1d9;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             cursor: pointer;
-            min-width: 200px;
+            min-width: 180px;
         }
 
         select:focus {
             outline: none;
-            border-color: #58a6ff;
+            border-color: var(--accent-blue);
         }
 
-        .main-container {
-            flex: 1;
+        .header-actions {
             display: flex;
-            justify-content: center;
-            align-items: stretch;
-            padding: 1rem;
-            overflow: hidden;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .slide-container {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 1200px;
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        /* Main Content Area */
+        .main {
+            flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
         }
 
-        .slide-content-wrapper {
+        /* Slide Viewport - fills available space */
+        .slide-viewport {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Slide - responsive sizing */
+        .slide {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 100%;
+            height: 100%;
+            max-width: 1600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Slide Content - scrollable area */
+        .slide-content {
             flex: 1;
             overflow-y: auto;
-            padding: 2rem 3rem;
-        }
-
-        .slide-content {
-            font-size: 1.1rem;
+            overflow-x: hidden;
+            padding: clamp(1.5rem, 4vw, 4rem);
+            font-size: clamp(0.95rem, 1.5vw, 1.25rem);
             line-height: 1.7;
-            color: #c9d1d9;
         }
 
+        /* Typography */
         .slide-content h1 {
-            color: #58a6ff;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #30363d;
-            padding-bottom: 0.5rem;
+            color: var(--accent-blue);
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+            padding-bottom: clamp(0.5rem, 1vw, 1rem);
+            border-bottom: 3px solid var(--border);
+            font-weight: 700;
         }
 
         .slide-content h2 {
-            color: #7ee787;
-            font-size: 1.5rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
+            color: var(--accent-green);
+            font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+            margin-top: clamp(1rem, 2.5vw, 2rem);
+            margin-bottom: clamp(0.5rem, 1vw, 1rem);
+            font-weight: 600;
         }
 
         .slide-content h3 {
-            color: #d29922;
-            font-size: 1.25rem;
-            margin-top: 1.25rem;
-            margin-bottom: 0.5rem;
+            color: var(--accent-purple);
+            font-size: clamp(1rem, 1.8vw, 1.4rem);
+            margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
+            margin-bottom: clamp(0.4rem, 0.8vw, 0.75rem);
+            font-weight: 600;
         }
 
+        .slide-content p {
+            margin-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+        }
+
+        .slide-content ul, .slide-content ol {
+            margin-left: clamp(1.25rem, 2.5vw, 2rem);
+            margin-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+        }
+
+        .slide-content li {
+            margin-bottom: clamp(0.35rem, 0.7vw, 0.6rem);
+        }
+
+        .slide-content li::marker {
+            color: var(--accent-blue);
+        }
+
+        /* Code */
         .slide-content code {
-            background: #21262d;
-            padding: 0.2rem 0.4rem;
+            background: var(--bg-tertiary);
+            padding: 0.2em 0.4em;
             border-radius: 4px;
             font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
-            color: #ff7b72;
-            font-size: 0.9em;
+            color: var(--accent-red);
+            font-size: 0.85em;
         }
 
         .slide-content pre {
-            background: #0d1117;
-            border: 1px solid #30363d;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
             border-radius: 8px;
             overflow-x: auto;
-            margin: 1rem 0;
+            margin: clamp(0.75rem, 1.5vw, 1.25rem) 0;
         }
 
         .slide-content pre code {
             background: transparent;
             color: inherit;
-            padding: 1rem;
+            padding: clamp(0.75rem, 1.5vw, 1.25rem);
             display: block;
-            font-size: 0.85rem;
-            line-height: 1.5;
+            font-size: clamp(0.75rem, 1.1vw, 0.95rem);
+            line-height: 1.6;
         }
 
-        .slide-content ul, .slide-content ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .slide-content li {
-            margin-bottom: 0.4rem;
-        }
-
+        /* Tables */
         .slide-content table {
             width: 100%;
             border-collapse: collapse;
-            margin: 1rem 0;
-            border: 1px solid #30363d;
+            margin: clamp(0.75rem, 1.5vw, 1.25rem) 0;
+            border: 1px solid var(--border);
+            font-size: clamp(0.8rem, 1.2vw, 1rem);
         }
 
         .slide-content th, .slide-content td {
-            border: 1px solid #30363d;
-            padding: 0.6rem;
+            border: 1px solid var(--border);
+            padding: clamp(0.4rem, 0.8vw, 0.75rem);
             text-align: left;
         }
 
         .slide-content th {
-            background: #21262d;
-            color: #58a6ff;
+            background: var(--bg-tertiary);
+            color: var(--accent-blue);
             font-weight: 600;
         }
 
         .slide-content tr:nth-child(even) {
-            background: #0d1117;
+            background: var(--bg-primary);
         }
 
+        /* Blockquote */
         .slide-content blockquote {
-            border-left: 4px solid #58a6ff;
-            margin: 1rem 0;
-            padding-left: 1rem;
-            color: #8b949e;
+            border-left: 4px solid var(--accent-blue);
+            margin: clamp(0.75rem, 1.5vw, 1.25rem) 0;
+            padding: clamp(0.5rem, 1vw, 1rem) clamp(0.75rem, 1.5vw, 1.25rem);
+            background: var(--bg-tertiary);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
             font-style: italic;
         }
 
+        /* Text formatting */
         .slide-content strong {
-            color: #f0883e;
+            color: var(--accent-orange);
+            font-weight: 600;
         }
 
         .slide-content em {
-            color: #a371f7;
+            color: var(--accent-purple);
         }
 
+        /* Slide Footer */
         .slide-footer {
-            background: #0d1117;
-            border-top: 1px solid #30363d;
-            padding: 0.75rem 2rem;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border);
+            padding: clamp(0.5rem, 1vw, 0.75rem) clamp(1rem, 2vw, 2rem);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
         }
 
-        .slide-number {
-            color: #8b949e;
-            font-size: 0.85rem;
+        .slide-counter {
+            color: var(--text-secondary);
+            font-size: clamp(0.75rem, 1vw, 0.9rem);
+            font-weight: 500;
         }
 
-        .navigation {
+        .slide-counter .current {
+            color: var(--accent-blue);
+            font-weight: 700;
+        }
+
+        /* Navigation Controls */
+        .nav-controls {
             display: flex;
+            align-items: center;
             gap: 0.5rem;
         }
 
         .nav-btn {
-            padding: 0.5rem 1rem;
-            background: #21262d;
-            border: 1px solid #30363d;
+            padding: clamp(0.4rem, 0.8vw, 0.6rem) clamp(0.75rem, 1.5vw, 1.25rem);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
-            color: #c9d1d9;
+            font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            transition: background 0.2s, border-color 0.2s;
+            gap: 0.4rem;
+            transition: all 0.2s;
+            font-weight: 500;
         }
 
-        .nav-btn:hover {
-            background: #30363d;
-            border-color: #8b949e;
+        .nav-btn:hover:not(:disabled) {
+            background: var(--border);
+            border-color: var(--text-secondary);
         }
 
         .nav-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
         }
 
-        .fullscreen-btn {
-            padding: 0.4rem 0.8rem;
-            background: #21262d;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: #8b949e;
-            margin-left: 1rem;
+        .nav-btn.primary {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: var(--bg-primary);
         }
 
-        .fullscreen-btn:hover {
-            background: #30363d;
-            color: #c9d1d9;
+        .nav-btn.primary:hover:not(:disabled) {
+            background: #79b8ff;
+            border-color: #79b8ff;
         }
 
-        .keyboard-hint {
-            color: #6e7681;
-            font-size: 0.8rem;
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--border);
+            z-index: 10;
         }
 
-        .loading {
-            text-align: center;
-            color: #8b949e;
-            font-size: 1.2rem;
-            padding: 3rem;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            transition: width 0.3s ease;
+        }
+
+        /* Loading/Error States */
+        .loading, .error {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            gap: 1rem;
         }
 
         .error {
-            background: #21262d;
-            border: 1px solid #f85149;
-            color: #f85149;
-            padding: 1rem;
+            color: var(--accent-red);
+        }
+
+        /* Scrollbar */
+        .slide-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Keyboard Hint - shown only on hover of footer */
+        .keyboard-hint {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
             border-radius: 8px;
-            margin: 1rem 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            white-space: nowrap;
         }
 
-        /* Scrollbar styling */
-        .slide-content-wrapper::-webkit-scrollbar {
-            width: 10px;
+        .slide-footer:hover .keyboard-hint {
+            opacity: 1;
         }
 
-        .slide-content-wrapper::-webkit-scrollbar-track {
-            background: #0d1117;
+        /* Fullscreen adjustments */
+        :fullscreen .header {
+            display: none;
         }
 
-        .slide-content-wrapper::-webkit-scrollbar-thumb {
-            background: #30363d;
-            border-radius: 5px;
+        :fullscreen .slide-viewport {
+            padding: 0;
         }
 
-        .slide-content-wrapper::-webkit-scrollbar-thumb:hover {
-            background: #484f58;
+        :fullscreen .slide {
+            border-radius: 0;
+            border: none;
+            max-width: none;
         }
 
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .header {
-                padding: 0 1rem;
+                padding: 0.5rem 1rem;
             }
 
-            .header h1 {
-                font-size: 1rem;
+            .logo span {
+                display: none;
             }
 
-            .slide-content-wrapper {
+            select {
+                min-width: 140px;
+                font-size: 0.85rem;
+            }
+
+            .lecture-selector label {
+                display: none;
+            }
+
+            .slide-viewport {
+                padding: 0.5rem;
+            }
+
+            .slide-content {
                 padding: 1rem;
+                font-size: 0.95rem;
+            }
+
+            .slide-footer {
+                padding: 0.5rem 1rem;
+            }
+
+            .nav-btn span {
+                display: none;
+            }
+
+            .nav-btn {
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        /* Small screens */
+        @media (max-width: 480px) {
+            .slide-content {
+                padding: 0.75rem;
+                font-size: 0.9rem;
             }
 
             .slide-content h1 {
-                font-size: 1.5rem;
+                font-size: 1.25rem;
             }
 
             .slide-content h2 {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
+            }
+
+            .slide-content h3 {
+                font-size: 1rem;
+            }
+        }
+
+        /* Large screens */
+        @media (min-width: 1920px) {
+            .slide-content {
+                padding: 5rem;
+                font-size: 1.35rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Go Programming Course</h1>
-        <div style="display: flex; align-items: center;">
-            <div class="lecture-selector">
-                <label for="lecture-select">Lecture:</label>
-                <select id="lecture-select">
-                    <option value="">Loading...</option>
-                </select>
-            </div>
-            <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
-        </div>
-    </div>
-
-    <div class="main-container">
-        <div class="slide-container" id="slide-container">
-            <div class="slide-content-wrapper" id="slide-content-wrapper">
-                <div class="loading">Loading slides...</div>
-            </div>
-            <div class="slide-footer">
-                <div class="keyboard-hint">← → Arrow keys | Space/Enter for next</div>
-                <div class="navigation">
-                    <button class="nav-btn" id="prev-btn" onclick="prevSlide()">← Previous</button>
-                    <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next →</button>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <span>🐹</span>
+                    <span>Go Course</span>
                 </div>
-                <div class="slide-number" id="slide-number"></div>
+                <div class="lecture-selector">
+                    <label>Lecture</label>
+                    <select id="lecture-select">
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
             </div>
-        </div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen (F)">
+                    ⛶
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="slide-viewport">
+                <div class="slide" id="slide">
+                    <!-- Slide Content -->
+                    <div class="slide-content" id="slide-content">
+                        <div class="loading">📡 Loading slides...</div>
+                    </div>
+
+                    <!-- Slide Footer -->
+                    <div class="slide-footer">
+                        <div class="slide-counter">
+                            Slide <span class="current" id="current-slide">0</span> / <span id="total-slides">0</span>
+                        </div>
+
+                        <div class="nav-controls">
+                            <button class="nav-btn" id="prev-btn" onclick="prevSlide()">
+                                ← <span>Previous</span>
+                            </button>
+                            <button class="nav-btn primary" id="next-btn" onclick="nextSlide()">
+                                <span>Next</span> →
+                            </button>
+                        </div>
+
+                        <div class="keyboard-hint">
+                            ← → Arrow keys • Space/Enter • F for fullscreen
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
@@ -384,7 +605,7 @@
             loadLecture(parseInt(e.target.value));
         });
 
-        // Simple markdown parser
+        // Parse markdown to HTML
         function parseMarkdown(md) {
             // Escape HTML
             md = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -432,7 +653,7 @@
                 html = html.replace(/<\/table><table>/gim, '');
             }
 
-            return '<div class="slide-content">' + html + '</div>';
+            return html;
         }
 
         // Split markdown into slides
@@ -454,36 +675,44 @@
                 currentSlide = 0;
                 showSlide();
             } catch (error) {
-                document.getElementById('slide-content-wrapper').innerHTML =
-                    `<div class="error">Error loading lecture: ${error.message}</div>`;
+                document.getElementById('slide-content').innerHTML =
+                    `<div class="error">❌ Error loading lecture: ${error.message}</div>`;
             }
         }
 
+        function updateProgress() {
+            const progress = slides.length > 0 ? ((currentSlide + 1) / slides.length) * 100 : 0;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+        }
+
         function showSlide() {
-            const wrapper = document.getElementById('slide-content-wrapper');
+            const content = document.getElementById('slide-content');
             if (slides.length === 0) {
-                wrapper.innerHTML = '<div class="error">No slides found</div>';
+                content.innerHTML = '<div class="error">No slides found</div>';
                 return;
             }
 
             const html = parseMarkdown(slides[currentSlide]);
-            wrapper.innerHTML = html;
+            content.innerHTML = html;
 
             // Apply syntax highlighting
-            wrapper.querySelectorAll('pre code').forEach((block) => {
+            content.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightElement(block);
             });
 
-            // Update slide number
-            document.getElementById('slide-number').textContent =
-                `Slide ${currentSlide + 1} of ${slides.length}`;
+            // Update counters
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            document.getElementById('total-slides').textContent = slides.length;
 
             // Update buttons
             document.getElementById('prev-btn').disabled = currentSlide === 0;
             document.getElementById('next-btn').disabled = currentSlide >= slides.length - 1;
 
+            // Update progress
+            updateProgress();
+
             // Scroll to top
-            wrapper.scrollTop = 0;
+            content.scrollTop = 0;
         }
 
         function nextSlide() {
@@ -510,14 +739,34 @@
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
-                e.preventDefault();
-                nextSlide();
-            } else if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                prevSlide();
-            } else if (e.key === 'f' || e.key === 'F') {
-                toggleFullscreen();
+            // Ignore if user is typing in a form
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'Enter':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    currentSlide = 0;
+                    showSlide();
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    currentSlide = slides.length - 1;
+                    showSlide();
+                    break;
+                case 'f':
+                case 'F':
+                    toggleFullscreen();
+                    break;
             }
         });
 
